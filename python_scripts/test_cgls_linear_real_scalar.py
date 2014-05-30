@@ -1,4 +1,4 @@
-from cgls_linear_real_scalar import *
+from cgls import *
 import os, sys, getopt, inspect
 import numpy as np
 from matplotlib.gridspec import GridSpec
@@ -48,28 +48,29 @@ def main(argv):
 if __name__ == '__main__':
     inputDir, outputDir = main(sys.argv[1:])
     #
+    # The linear problem
     Adot  = lambda x: np.array(4.0 * x )
-    ATdot  = Adot
     bvect = np.array([40.0])
     #
-    prob  = Cgls(Adot, ATdot, bvect)
-    prob2 = Steepest(Adot, ATdot, bvect, x0 = np.array([20.0]))
-    #
-    # Cgls
+    # cgls
+    prob  = Cgls(Adot, bvect, x0 = np.array([0.0]))
     xs = []
-    xs.append(0.0)
-    prob.ilruft(iterations = 1)
-    xs.append(prob.Sample[0])
     ys = []
+    xs.append(0.0)
+    for i in range(len(bvect)):
+        prob.cgls(iterations = 1)
+        xs.append(prob.x[-1])
     for x in xs:
         ys.append(f(x))
     #
-    # Steepest
+    # Steepest descent
+    prob2 = Steepest(Adot, bvect, x0 = np.array([15.0]))
     xs2 = []
-    xs2.append(20.0)
-    prob2.sd(iterations = 1)
-    xs2.append(prob2.x[0])
     ys2 = []
+    xs2.append(15.0)
+    for i in range(len(bvect)):
+        prob2.sd(iterations = 1)
+        xs2.append(prob2.x[-1])
     for x in xs2:
         ys2.append(f(x))
     #
