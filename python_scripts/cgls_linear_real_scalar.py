@@ -64,42 +64,46 @@ class Steepest(object):
     and the bvector
     where x and b may be any numpy arrays."""
 
-    def __init__(self, Adot, ATdot, bvect, imax = np.inf, e_tol = 1.0e-10, x0 = None):
+    def __init__(self, Adot, ATdot, bvect, imax = 10**5, e_tol = 1.0e-10, x0 = None):
         self.Adot  = Adot
         self.ATdot = ATdot
         self.bvect = bvect
-        self.iterationsILRUFT = 0
+        self.iters = 0
         self.error_residual = []
         self.imax = imax
         self.e_tol = e_tol
         self.x0 = x0
 
-    def sd(self, iterations = 10, refresh = 'no'):
+    def sd(self, iterations = None):
         """Iteratively solve the linear equations using the steepest descent algorithm.
         
         All of the vectors are 'selfed' so that the iterations may continue 
         when called again."""
-        if self.iterationsILRUFT == 0 :
+        if self.iters == 0 :
             if self.x0 == None :
                 self.x = self.ATdot(self.bvect)
                 self.x.fill(0)
             else :
                 self.x = self.x0
-            self.i = 0
+            self.iters = 0
             self.r = self.bvect - self.Adot(self.x)
             self.delta   = np.sum(self.r**2)
             self.delta_0 = self.delta
-        
-        while self.i < self.imax and (self.delta > self.e_tol**2 * self.delta_0):
+        # 
+        if iterations == None:
+            iterations = self.imax
+        #
+        for i in range(iterations):
             q     = self.Adot(self.r)
             alpha = self.delta / np.sum(self.r * q)
             self.x = self.x + alpha * self.r
-            if self.i % 50 == 0 :
+            if self.iters % 50 == 0 :
                 self.r = self.bvect - self.Adot(self.x)
             else :
                 self.r = r - alpha * q
             self.delta   = np.sum(self.r**2)
-            self.i = self.i + 1
-
-        self.iterationsILRUFT += self.i
+            self.iters = self.iters + 1
+            if self.iters > self.imax or (self.delta < self.e_tol**2 * self.delta_0):
+                break
+        #
         return self.x
