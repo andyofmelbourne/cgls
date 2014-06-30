@@ -41,7 +41,7 @@ class Steepest(object):
             if self.iters % 50 == 0 :
                 self.r = self.bvect - self.Adot(self.x)
             else :
-                self.r = r - alpha * q
+                self.r = self.r - alpha * q
             self.d     = np.sum(self.r**2)
             self.iters = self.iters + 1
             self.e_res.append(np.sqrt(self.d))
@@ -78,32 +78,32 @@ class Cgls(object):
         All of the vectors are 'selfed' so that the iterations may continue 
         when called again."""
         if self.iters == 0 :
-            self.r     = self.bvect - self.Adot(self.x)
-            self.d     = self.r.copy()
-            self.d_new = np.sum(self.r**2)
-            self.d_0   = self.d_new.copy()
+            self.r         = self.bvect - self.Adot(self.x)
+            self.d         = self.r.copy()
+            self.delta_new = np.sum(self.r**2)
+            self.delta_0   = self.delta_new.copy()
         # 
         if iterations == None :
             iterations = self.imax
         #
         for i in range(iterations):
             q     = self.Adot(self.d)
-            alpha = self.d_new / np.sum(self.d * q)
+            alpha = self.delta_new / np.sum(self.d * q)
             self.x = self.x + alpha * self.d
             #
             if self.iters % 50 == 0 :
                 self.r = self.bvect - self.Adot(self.x)
             else :
-                self.r = r - alpha * q
+                self.r = self.r - alpha * q
             #
-            d_old      = self.d_new.copy()
-            self.d_new = np.sum(self.r**2)
-            beta       = self.d_new / d_old
+            delta_old      = self.delta_new.copy()
+            self.delta_new = np.sum(self.r**2)
+            beta       = self.delta_new / delta_old
             self.d     = self.r + beta * self.d
             #
             self.iters = self.iters + 1
             self.e_res.append(np.sqrt(self.d))
-            if self.iters > self.imax or (self.d < self.e_tol**2 * self.d_0):
+            if self.iters > self.imax or (self.delta_new > self.e_tol**2 * self.delta_0):
                 break
         #
         return self.x
