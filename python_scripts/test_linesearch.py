@@ -6,24 +6,24 @@ import matplotlib.pyplot as plt
 
 a = 1.0
 b = 1.0
-c = 30.0
-x0 = 5.0
+c = 40.0
+x0 = 0.0
 def f(x):
     f = a * x**2 + c * np.exp( -b * (x - x0)**2)
     return f
 
 def fd(x, d):
-    out = d * (2 * a * x - 2 * (x - x0) * c * np.exp( -b * (x - x0)**2))
+    out = d * (2 * a * x - 2 * b * (x - x0) * c * np.exp( -b * (x - x0)**2))
     return out
 
 def dfd(x, d):
-    out = 2 * a - 2 * c * np.exp( -b * (x - x0)**2) + 4 * (x - x0)**2 * c**2 * np.exp( -b * (x - x0)**2)
+    out = 2 * a - 2 * c * b * np.exp( -b * (x - x0)**2) + 4 * (x - x0)**2 * b**2 * c * np.exp( -b * (x - x0)**2)
     out = d * out * d
     return out
 
 xs = []
 ys = []
-xs.append(7.5)
+xs.append(0.9)
 ys.append(f(xs[-1]))
 for i in range(1000):
     xx, status = ls.line_search_newton_raphson(xs[-1], 1, fd, dfd, iters = 1, tol=1.0e-10)
@@ -34,7 +34,7 @@ for i in range(1000):
 
 xs2 = []
 ys2 = []
-xs2.append(7.5)
+xs2.append(-0.9)
 ys2.append(f(xs2[-1]))
 for i in range(1000):
     xx, status = ls.line_search_secant(xs2[-1], 1, fd, iters = 1, tol=1.0e-10)
