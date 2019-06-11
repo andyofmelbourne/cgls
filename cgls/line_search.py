@@ -42,16 +42,19 @@ def line_search_secant(x, d, fd, iters = 1, sigma = 1.0e-3, tol=1.0e-10):
     minimum along the line is infinitely far away.
     Algorithm from Eq. (59) of painless-conjugate-gradient.pdf
     """
+    dn = d / np.sum(d**2)
     for i in range(iters):
-        fd_0  = fd(x, d)
-        fd_1  = fd(x + sigma * d, d)
+        fd_0  = fd(x, dn)
+        fd_1  = fd(x + sigma * dn, dn)
         dfd   = fd_1 - fd_0
+        if np.abs(fd_0) < tol :
+            return x, True
         if dfd < tol :
             return x, False
         #
         alpha = - sigma * fd_0 / dfd 
         #
-        x = x + alpha * d
+        x = x + alpha * dn
         sigma = - alpha # ??????
     return x, True
 

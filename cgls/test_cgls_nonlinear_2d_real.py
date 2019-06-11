@@ -98,7 +98,7 @@ cgls = cg.Cgls(xs2[-1], f, df, fd, dfd)
 #
 for i in range(10):
     xs2.append(cgls.cgls(iterations=1))
-print xs2
+print(xs2)
 
 myShow(X, Y, F, xs = xs , xs2=xs2, title = 'f(x)', xlabel='steepest descent', xlabel2='cgls')
 

@@ -71,11 +71,11 @@ def main(argv):
     try :
         opts, args = getopt.getopt(argv,"hi:o:",["inputdir=","outputdir="])
     except getopt.GetoptError:
-        print 'test_cgls_linear_real_scalar.py -i <inputdir> -o <outputdir>'
+        print('test_cgls_linear_real_scalar.py -i <inputdir> -o <outputdir>')
         sys.exit(2)
     for opt, arg in opts:
         if opt == '-h':
-            print 'test_cgls_linear_real_scalar.py -i <inputdir> -o <outputdir>'
+            print('test_cgls_linear_real_scalar.py -i <inputdir> -o <outputdir>')
             sys.exit()
         elif opt in ("-i", "--inputdir"):
             inputdir = arg

@@ -15,7 +15,7 @@ class Steepest(object):
         self.imax  = imax
         self.e_tol = e_tol
         self.e_res = []
-        if x0 == None :
+        if x0 is None :
             self.x = Adot(bvect)
             self.x.fill(0.0)
         else :
@@ -226,7 +226,7 @@ def test_Cgls():
     xret, info = scipy.sparse.linalg.cg(ATA, ATb, tol=1.0e-20, maxiter=iters)
     
     d1 = time.time()
-    print 'scipy:', d1-d0, 'residual:', np.sum( (np.dot(ATA, xret) - ATb)**2 ), 'fidelity error:', np.sum( (xret-x)**2)
+    print('scipy:', d1-d0, 'residual:', np.sum( (np.dot(ATA, xret) - ATb)**2 ), 'fidelity error:', np.sum( (xret-x)**2))
     
     
     Adot = lambda z : np.dot(ATA, z)
@@ -237,7 +237,7 @@ def test_Cgls():
     xret = cgls.cgls_symmetric_poisitve_definite(iters)
     
     d1 = time.time()
-    print 'Cgls:', d1-d0, 'residual:', np.sum( (np.dot(ATA, cgls.x) - ATb)**2 ), 'fidelity error:', np.sum( (xret-x)**2)
+    print('Cgls:', d1-d0, 'residual:', np.sum( (np.dot(ATA, cgls.x) - ATb)**2 ), 'fidelity error:', np.sum( (xret-x)**2))
     
     
     Adot  = lambda z : np.dot(A, z)
@@ -249,6 +249,6 @@ def test_Cgls():
     xret = cgls.cgls(iters)
     
     d1 = time.time()
-    print 'Cgls:', d1-d0, 'residual:', np.sum( (np.dot(ATA, xret) - ATb)**2 ), 'fidelity error:', np.sum( (xret-x)**2)
+    print('Cgls:', d1-d0, 'residual:', np.sum( (np.dot(ATA, xret) - ATb)**2 ), 'fidelity error:', np.sum( (xret-x)**2))
 
 

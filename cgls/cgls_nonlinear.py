@@ -67,12 +67,12 @@ class Cgls(object):
         self.e_tol = e_tol
         self.errors = []
         self.x     = x0
-        if dfd != None :
+        if dfd is not None :
             self.dfd         = dfd
             self.line_search = lambda x, d: ls.line_search_newton_raphson(x, d, self.fd, self.dfd, iters = 100, tol=1.0e-10)
         else :
             self.dfd         = None
-            self.line_search = lambda x, d: ls.line_search_secant(x, d, self.fd, iters = 2, sigma = 1.0e-3, tol=1.0e-10)
+            self.line_search = lambda x, d: ls.line_search_secant(x, d, self.fd, iters = 20, sigma = 1.0, tol=1.0e-10)
         #
         #self.cgls = self.cgls_Ploak_Ribiere
         self.cgls = self.cgls_Flecher_Reeves
@@ -94,6 +94,8 @@ class Cgls(object):
             #
             # perform a line search of f along d
             self.x, status = self.line_search(self.x, self.d)
+            if status is False :
+                print('Warning: line search failed!')
             # 
             self.r         = - self.df(self.x)
             delta_old      = self.delta_new

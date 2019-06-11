@@ -30,5 +30,5 @@ if __name__ == '__main__':
     show()
 
     mse = np.sum( (df_x - df_numpy_x)**2 ) / float(df_x.size)
-    print 'mean squared error:', mse
+    print('mean squared error:', mse)
     
